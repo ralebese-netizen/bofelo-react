@@ -1,35 +1,29 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 
 const schema = a.schema({
-  Driver: a
-    .model({
-      fullName: a.string(),
-      email: a.string().required(),
-      phoneNumber: a.string(),
-      homeAddress: a.string(),
-      idPhotoPath: a.string(),
-      selfiePath: a.string(),
-      status: a.string(), 
-      vehicleType: a.string(),
-      plateNumber: a.string(),
-      kinName: a.string(),
-      kinPhone: a.string(),
-    })
-    // This allows the person who created the profile to read/edit it
-    // and allows us to create profiles during registration
-    .authorization((allow) => [allow.owner(), allow.guest()]), 
-});
+  // 1. DRIVER PROFILE
+  Driver: a.model({
+    fullName: a.string(),
+    email: a.string().required(),
+    phoneNumber: a.string(),
+    status: a.string(), 
+    walletBalance: a.float(),
+  }).authorization((allow) => [allow.owner(), allow.guest()]),
 
-export type Schema = ClientSchema<typeof schema>;
+  // 2. ORDER DETAILS
+  Order: a.model({
+    customerName: a.string(),
+    pickup: a.string(),
+    dropoff: a.string(),
+    fee: a.float(),
+    status: a.string(), // 'Pending', 'Accepted', 'Completed'
+    driverId: a.string(),
+    driverLat: a.float(),
+    driverLng: a.float(),
+  }).authorization((allow) => [allow.owner(), allow.guest()]),
 
-export const data = defineData({
-  schema,
-  authorizationModes: {
-    // We use 'userPool' so it links to your Login system
-    defaultAuthorizationMode: 'userPool',
-  },
-});
-ChatMessage: a.model({
+  // 3. CHAT ENGINE
+  ChatMessage: a.model({
     orderId: a.string().required(),
     text: a.string(),
     type: a.string(), // 'text', 'image', 'audio', 'location', 'document'
@@ -41,31 +35,11 @@ ChatMessage: a.model({
 });
 
 export type Schema = ClientSchema<typeof schema>;
-export const data = defineData({ schema, authorizationModes: { defaultAuthorizationMode: 'apiKey' } });
-// amplify/data/resource.ts
-import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 
-const schema = a.schema({
-  Driver: a.model({
-    fullName: a.string(),
-    email: a.string().required(),
-    phoneNumber: a.string(),
-    status: a.string(), 
-    walletBalance: a.float(),
-  }).authorization((allow) => [allow.owner(), allow.guest()]),
-
-  Order: a.model({
-    customerName: a.string(),
-    pickup: a.string(),
-    dropoff: a.string(),
-    fee: a.float(),
-    status: a.string(), // 'Pending', 'Accepted', 'Completed'
-    driverId: a.string(),
-    driverLat: a.float(),
-    driverLng: a.float(),
-  }).authorization((allow) => [allow.owner(), allow.guest()]),
+export const data = defineData({ 
+  schema, 
+  authorizationModes: { 
+    defaultAuthorizationMode: 'apiKey' 
+  } 
 });
-
-export type Schema = ClientSchema<typeof schema>;
-export const data = defineData({ schema, authorizationModes: { defaultAuthorizationMode: 'apiKey' } });
 
