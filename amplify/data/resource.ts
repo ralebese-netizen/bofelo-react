@@ -42,4 +42,3 @@ export const data = defineData({
     defaultAuthorizationMode: 'apiKey' 
   } 
 });
-
