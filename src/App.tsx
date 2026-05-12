@@ -1,18 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Amplify } from 'aws-amplify';
 import { signIn, signUp, signOut } from 'aws-amplify/auth';
 import './App.css';
 
-// 1. Setup AWS Connection
-// Note: If this line shows an error, it's okay, AWS will find it during the build!
+// Configure AWS
 import outputs from '../amplify_outputs.json';
 Amplify.configure(outputs);
 
 export default function App() {
-  // Navigation State: 'LOGIN', 'SIGNUP', 'PENDING', 'DASHBOARD'
   const [view, setView] = useState('LOGIN');
-  
-  // Form State
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -35,7 +31,6 @@ export default function App() {
     }
   };
 
-  // --- 1. LOGIN SCREEN ---
   if (view === 'LOGIN') return (
     <div id="login-screen">
       <div className="login-card">
@@ -48,7 +43,6 @@ export default function App() {
     </div>
   );
 
-  // --- 2. SIGNUP SCREEN ---
   if (view === 'SIGNUP') return (
     <div id="signup-screen" style={{display: 'block'}}>
       <h1 style={{fontSize: '24px', fontWeight: '800'}}>Driver Registration</h1>
@@ -61,16 +55,14 @@ export default function App() {
     </div>
   );
 
-  // --- 3. PENDING SCREEN ---
   if (view === 'PENDING') return (
     <div id="pending-approval-screen" style={{display: 'block'}}>
        <h1 style={{fontSize: '24px', fontWeight: '800'}}>Reviewing Profile</h1>
-       <p style={{color: '#6b7280', marginTop: '10px'}}>We are checking your documents. Please check back soon.</p>
+       <p style={{color: '#6b7280', marginTop: '10px'}}>Our team is verifying your documents. Check back soon!</p>
        <button onClick={() => setView('LOGIN')} className="btn-outline" style={{marginTop: '30px', width: '100%'}}>Log Out</button>
     </div>
   );
 
-  // --- 4. DASHBOARD ---
   return (
     <div id="dashboard" style={{display: 'block'}}>
       <div className="header">
@@ -79,8 +71,14 @@ export default function App() {
       </div>
       <div className="container">
         <div className="section-title">Active Deliveries</div>
-        <div className="empty-placeholder">
-          <p className="empty-placeholder-title">Waiting for orders...</p>
+        <div className="order-card">
+            <div className="card-top">
+                <span className="price">M 0.00</span>
+                <span className="status-pill status-new">No Orders</span>
+            </div>
+            <div className="empty-placeholder">
+              <p className="empty-placeholder-title">Waiting for orders...</p>
+            </div>
         </div>
       </div>
     </div>
