@@ -29,3 +29,16 @@ export const data = defineData({
     defaultAuthorizationMode: 'userPool',
   },
 });
+ChatMessage: a.model({
+    orderId: a.string().required(),
+    text: a.string(),
+    type: a.string(), // 'text', 'image', 'audio', 'location', 'document'
+    mediaUrl: a.string(),
+    fileName: a.string(),
+    sender: a.string().required(), // 'Driver' or 'Customer'
+    timestamp: a.datetime(),
+  }).authorization((allow) => [allow.owner(), allow.guest()]),
+});
+
+export type Schema = ClientSchema<typeof schema>;
+export const data = defineData({ schema, authorizationModes: { defaultAuthorizationMode: 'apiKey' } });
