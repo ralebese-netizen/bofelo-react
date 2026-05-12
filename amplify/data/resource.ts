@@ -42,3 +42,30 @@ ChatMessage: a.model({
 
 export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({ schema, authorizationModes: { defaultAuthorizationMode: 'apiKey' } });
+// amplify/data/resource.ts
+import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+
+const schema = a.schema({
+  Driver: a.model({
+    fullName: a.string(),
+    email: a.string().required(),
+    phoneNumber: a.string(),
+    status: a.string(), 
+    walletBalance: a.float(),
+  }).authorization((allow) => [allow.owner(), allow.guest()]),
+
+  Order: a.model({
+    customerName: a.string(),
+    pickup: a.string(),
+    dropoff: a.string(),
+    fee: a.float(),
+    status: a.string(), // 'Pending', 'Accepted', 'Completed'
+    driverId: a.string(),
+    driverLat: a.float(),
+    driverLng: a.float(),
+  }).authorization((allow) => [allow.owner(), allow.guest()]),
+});
+
+export type Schema = ClientSchema<typeof schema>;
+export const data = defineData({ schema, authorizationModes: { defaultAuthorizationMode: 'apiKey' } });
+
